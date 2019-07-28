@@ -1,21 +1,24 @@
 // server.js
 
 // set up ======================================================================
+
+//FOUR DIFF EJS TEMPLATES LOGIN, HOMEPAGE, SIGNUP
+//CONFIG FILE IS FOR STUFF NOT PUSHING TO GITHUB
 // get all the tools we need
 var express  = require('express');
 var app      = express();
 var port     = process.env.PORT || 8080;
 const MongoClient = require('mongodb').MongoClient
-var mongoose = require('mongoose');
-var passport = require('passport');
-var flash    = require('connect-flash');
+var mongoose = require('mongoose'); //a module for "talking" to Mongo
+var passport = require('passport'); //for passwords
+var flash    = require('connect-flash'); //let's user know their pw is wrong
 
-var morgan       = require('morgan');
+var morgan       = require('morgan'); //logs ever request (the gets?)
 var cookieParser = require('cookie-parser');
 var bodyParser   = require('body-parser');
 var session      = require('express-session');
 
-var configDB = require('./config/database.js');
+var configDB = require('./config/database.js'); //you can .gitignore folder (module.exports into another file in the config folder)
 
 var db
 
@@ -23,7 +26,7 @@ var db
 mongoose.connect(configDB.url, (err, database) => {
   if (err) return console.log(err)
   db = database
-  require('./app/routes.js')(app, passport, db);
+  require('./app/routes.js')(app, passport, db)//parameters from module.export function;
 }); // connect to our database
 
 //app.listen(port, () => {
