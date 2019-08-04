@@ -1,17 +1,26 @@
 module.exports = function(app, passport, db) {
 
-// normal routes ===============================================================
 
-    // show the home page (will also have our login links)
+
+//Watson API variables to work with
+
+const workspaceID = '';
+const username = '';
+const password = '';
+
+const ASSISTANT_HOST = '';
+const ASSISTANT_PATH =  '';
+const ASSISTANT_AUTH = ''
+
     app.get('/', function(req, res) {
         res.render('index.ejs');
     });
 
-    // PROFILE SECTION =========================
+
     app.get('/profile', isLoggedIn, function(req, res) {
         db.collection('messages').find().toArray((err, result) => {
           if (err) return console.log(err)
-          res.render('profile.ejs', {
+          res.render('chat.ejs', {
             user : req.user,
             messages: result
           })
@@ -24,21 +33,20 @@ module.exports = function(app, passport, db) {
         res.redirect('/');
     });
 
-// message board routes ===============================================================
+// chat routes ===============================================================
 
     app.post('/messages', (req, res) => {
-      db.collection('messages').save({name: req.body.name, msg: req.body.msg, thumbUp: 0, thumbDown:0}, (err, result) => {
-        if (err) return console.log(err)
-        console.log('saved to database')
-        res.redirect('/profile')
-      })
+      // db.collection('messages').save({//messages: req.body.messages mood: req.body.mood}, (err, result) => {
+      //   if (err) return console.log(err)
+      //   console.log('saved to database')
+      //   res.redirect('/profile')
+      // })
     })
 
     app.put('/messages', (req, res) => {
       db.collection('messages')
-      .findOneAndUpdate({name: req.body.name, msg: req.body.msg}, {
+      .findOneAndUpdate({}, {
         $set: {
-          thumbUp:req.body.thumbUp + 1
         }
       }, {
         sort: {_id: -1},
@@ -48,11 +56,14 @@ module.exports = function(app, passport, db) {
         res.send(result)
       })
     })
-  app.put('/thumbDown', (req, res) => {
+
+//Will potentially add a mood graph based off of user input to be the "update"
+
+  app.put('mood', (req, res) => {
       db.collection('messages')
-      .findOneAndUpdate({name: req.body.name, msg: req.body.msg}, {
+      .findOneAndUpdate({}, {
         $set: {
-          thumbUp:req.body.thumbUp - 1,
+
         }
       }, {
         sort: {_id: -1},
@@ -66,9 +77,9 @@ module.exports = function(app, passport, db) {
 
 
 
-
-    app.delete('/messages', (req, res) => {
-      db.collection('messages').findOneAndDelete({name: req.body.name, msg: req.body.msg}, (err, result) => {
+//Still need to figure out what to delete. Moods??
+    app.delete('', (req, res) => {
+      db.collection('messages').findOneAndDelete({}, (err, result) => {
         if (err) return res.send(500, err)
         res.send('Message deleted!')
       })
